@@ -1,22 +1,27 @@
 package com.adrian.demojpa.infrastructure.repository;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.adrian.demojpa.application.service.PersonService;
 import com.adrian.demojpa.domain.Person;
 import com.adrian.demojpa.domain.Rol;
+import com.adrian.demojpa.domain.dto.PersonRequest;
+import com.adrian.demojpa.infrastructure.error.RolDuplicateException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
-    private final RolRepositoy rolRepositoy;
 
-    public PersonServiceImpl(PersonRepository personRepository, RolRepositoy rolRepositoy) {
+    public PersonServiceImpl(PersonRepository personRepository) {
         this.personRepository = personRepository;
-        this.rolRepositoy = rolRepositoy;
     }
 
     @Override
@@ -30,8 +35,24 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<Rol> findAllRolesByFilter(String filter, String value) {
-        return rolRepositoy.findAll(); // devolver todos
+    public Person patchPerson(Long id, PersonRequest personRequest) {
+        Person pOptional= personRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("No se encontró el usuario solicitado"));
+
+        if (personRequest.getName() != null) {
+            pOptional.setName(personRequest.getName());
+        }
+
+        if (personRequest.getSurname() != null) {
+            pOptional.setLastName(null);(personRequest.getSurname());
+        }
+
+        if (personRequest.getSkill() != null) {
+            pOptional.setLanguage(personRequest.getSkill());
+        }
+
+        personRepository.save(pOptional);
+        return pOptional;
     }
+
     
 }
