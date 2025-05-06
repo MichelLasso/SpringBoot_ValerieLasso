@@ -6,8 +6,10 @@ import java.util.List;
 import com.adrian.demojpa.domain.Person;
 import com.adrian.demojpa.domain.Rol;
 import com.adrian.demojpa.domain.dto.PersonRequest;
+import com.adrian.demojpa.domain.dto.PersonResponse;
 
 public interface PersonService {
-    public List<Person> findAllUsersByFilter(String filter, String value);
-    public Person patchPerson(Long id, PersonRequest personRequest);
+    public List<PersonResponse> findAllUsersByFilter(String filter, String value);
+    public PersonResponse patchPerson(Long id, PersonRequest personRequest);
+    public PersonResponse createNewUsers(PersonRequest personDto);
 }
